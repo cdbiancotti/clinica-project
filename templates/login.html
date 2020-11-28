@@ -1,0 +1,12 @@
+{% extends 'layout/head.html' %} {% block metas %}
+<title>Log In</title>
+{% endblock %} {% block body %} {% if mensaje %}
+<p>{{mensaje}}</p>
+{% endif %}
+<form action="{% url 'usuarios:log_in' %}" method="post">
+  {% csrf_token %}
+  <input type="text" name="username" placeholder="Usuario" />
+  <input type="password" name="password" placeholder="Password" />
+  <button>Log in</button>
+</form>
+{% endblock %}

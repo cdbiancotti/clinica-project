@@ -1,0 +1,19 @@
+{% extends 'layout/header.html' %} {% block metas %}
+<title>Pacientes</title>
+{% endblock %} {% block main %}
+<h2>Listado de pacientes</h2>
+<h3>Filtros:</h3>
+<form action="{% url 'web_app:pacientes' %}" method="POST">
+  {% csrf_token %}
+  <input type="text" name="nombre" />
+  <input type="text" name="apellido" />
+  <button>Buscar</button>
+</form>
+<ul>
+  {% for paciente in pacientes %}
+  <li>{{paciente}}</li>
+  {% empty %}
+  <li>No se encontraron pacientes.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

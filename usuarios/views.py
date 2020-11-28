@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import login, logout, authenticate
@@ -9,7 +9,12 @@ from django.contrib.auth import login, logout, authenticate
 def index(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('usuarios:log_in'))
-    return HttpResponseRedirect(reverse('usuarios:log_in'))
+    return redirect('usuarios:perfil')
+
+def perfil(request):
+    return render(request, 'perfil.html', {
+        'usuario': request.user
+    })
 
 
 def log_in(request):
@@ -23,14 +28,14 @@ def log_in(request):
             login(request, user)
             return HttpResponseRedirect(reverse('usuarios:index'))
         else:
-            return render(request, 'usuarios/login.html', {
+            return render(request, 'login.html', {
                 'mensaje': 'Credenciales no validas.'
             })
-    return render(request, 'usuarios/login.html')
+    return render(request, 'login.html')
 
 
 def log_out(request):
     logout(request)
-    return render(request, 'usuarios/login.html', {
-        'mensaje': 'Probando el template'
+    return render(request, 'logout.html', {
+        'mensaje': 'Te has desconectado con exito!'
     })

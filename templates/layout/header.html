@@ -1,0 +1,10 @@
+{% extends 'layout/head.html' %} {% block body %}
+<header>
+  <h1>Clinica</h1>
+  <nav>
+    <a href="{% url 'usuarios:perfil' %}">Mi Perfil</a>
+    <a href="{% url 'web_app:pacientes' %}">Pacientes</a>
+    <a href="{% url 'web_app:turnos' %}">Turnos</a>
+  </nav>
+</header>
+{% block main %} {% endblock %} {% endblock %}

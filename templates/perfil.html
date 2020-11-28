@@ -1,0 +1,7 @@
+{% extends 'layout/header.html' %} {% block metas %}
+<title>Perfil</title>
+{% endblock %} {% block main %}
+<p>Perfil de {{usuario}}</p>
+
+<a href="{% url 'usuarios:log_out' %}">Log out</a>
+{% endblock %}

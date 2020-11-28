@@ -1,0 +1,7 @@
+{% extends 'layout/head.html' %} {% block metas %}
+<title>Log Out</title>
+{% endblock %}{% block body %} {% if mensaje %}
+<p>{{mensaje}}</p>
+
+<a href="{% url 'usuarios:log_in' %}">Log In</a>
+{% endif %} {% endblock %}
