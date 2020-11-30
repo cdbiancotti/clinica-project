@@ -16,7 +16,6 @@ def perfil(request):
         'usuario': request.user
     })
 
-
 def log_in(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -32,7 +31,6 @@ def log_in(request):
                 'mensaje': 'Credenciales no validas.'
             })
     return render(request, 'login.html')
-
 
 def log_out(request):
     logout(request)

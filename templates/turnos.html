@@ -2,5 +2,48 @@
 <title>Turnos</title>
 {% endblock %} {% block main %}
 <h2>Listado de turnos:</h2>
-
+<h3>Filtros:</h3>
+<form action="{% url 'web_app:turnos' %}" method="POST">
+  {% csrf_token %}
+  <input type="date" name="fecha" />
+  <label for="estado">Estado</label>
+  <select name="estado">
+    <option value="0" selected default disabled>Seleccionar Estado</option>
+    {% for estado in estados %}
+    <option value="{{estado.id}}">{{estado}}</option>
+    {%empty%}
+    <option value="0" disabled>No hay estados cargados</option>
+    {% endfor %}
+  </select>
+  <label for="paciente">Paciente</label>
+  <select name="paciente">
+    <option value="0" selected default disabled>Seleccionar Paciente</option>
+    {% for paciente in pacientes %}
+    <option value="{{paciente.id}}">{{paciente}}</option>
+    {%empty%}
+    <option value="0" disabled>No hay pacientes cargados</option>
+    {% endfor %}
+  </select>
+  <label for="medico">Medico</label>
+  <select name="medico">
+    <option value="0" selected default disabled>Seleccionar Medico</option>
+    {% for medico in medicos %}
+    <option value="{{medico.id}}">{{medico}}</option>
+    {%empty%}
+    <option value="0" disabled>No hay medicos disponibles</option>
+    {% endfor %}
+  </select>
+  <button>Buscar</button>
+</form>
+<a href="{% url 'web_app:turno' 0 %}">Nuevo Turno</a>
+<ul>
+  {% for turno in turnos %}
+  <li>
+    {{turno}} <a href="{% url 'web_app:turno' turno.id %}">Ver</a
+    ><a href="{% url 'web_app:eliminar_turno' turno.id %}">Eliminar</a>
+  </li>
+  {% empty %} {% if busqueda_realizada %}
+  <li>No se encontraron turnos.</li>
+  {% endif %} {% endfor %}
+</ul>
 {% endblock %}

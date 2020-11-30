@@ -1,0 +1,29 @@
+{% extends 'layout/header.html' %} {% block metas %}
+<title>Pacientes</title>
+{% endblock %} {% block main %}
+<h2>Paciente {% if paciente %} {{paciente}} {% else %} Nuevo {% endif %}</h2>
+<h3>Datos personales</h3>
+<form action="{% url 'web_app:crear_paciente' paciente_id %}" method="POST">
+  {% csrf_token %}
+  <input type="text" name="nombre" placeholder="Nombre" value="{{paciente.nombre}}" />
+  <input type="text" name="apellido" placeholder="Apellido" value="{{paciente.apellido}}" />
+  <input type="number" name="edad" placeholder="Edad" value="{{paciente.edad}}" />
+  <input type="date" name="nacimiento" placeholder="Fecha Nacimiento" value="{{fecha_nacimiento}}" />
+  <input type="text" name="dni" placeholder="DNI" value="{{paciente.dni}}" />
+  <button>Guardar</button>
+</form>
+<h3>Historia medica</h3>
+<form action="{% url 'web_app:nueva_observacion' paciente_id %}" method="POST">
+  {% csrf_token %}
+  <textarea type="text" name="observacion" placeholder="Nueva observacion..." /></textarea>
+  <button>Guardar</button>
+</form>
+<dl>
+  {% for observacion in historia_medica %}
+  <dt>{{observacion.fecha}}</dt>
+  <dd>{{observacion.descripcion}}</dd>
+  {%empty%}
+  <p>Este paciente no posee historia clinica.</p>
+  {% endfor %}
+</dl>
+{% endblock %}

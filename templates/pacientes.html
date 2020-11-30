@@ -5,15 +5,19 @@
 <h3>Filtros:</h3>
 <form action="{% url 'web_app:pacientes' %}" method="POST">
   {% csrf_token %}
-  <input type="text" name="nombre" />
-  <input type="text" name="apellido" />
+  <input type="text" name="nombre" placeholder="Nombre" />
+  <input type="text" name="apellido" placeholder="Apellido" />
+  <input type="number" name="dia" placeholder="Dia" />
+  <input type="number" name="mes" placeholder="Mes" />
+  <input type="number" name="ano" placeholder="Año" />
   <button>Buscar</button>
 </form>
+<a href="{% url 'web_app:paciente' 0 %}">Nuevo Paciente</a>
 <ul>
   {% for paciente in pacientes %}
-  <li>{{paciente}}</li>
-  {% empty %}
+  <li>{{paciente}} <a href="{% url 'web_app:paciente' paciente.id %}">Ver</a></li>
+  {% empty %} {% if busqueda_realizada %}
   <li>No se encontraron pacientes.</li>
-  {% endfor %}
+  {% endif %} {% endfor %}
 </ul>
 {% endblock %}
