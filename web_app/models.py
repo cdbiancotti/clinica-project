@@ -31,10 +31,37 @@ class Turno(models.Model):
 
 class Observacion(models.Model):
     fecha = models.DateField()
-    descripcion = models.CharField(max_length=64)
+    descripcion = models.CharField(max_length=150)
     medico = models.ForeignKey(User, on_delete=models.PROTECT, related_name="medicoObservacion")
     paciente = models.ForeignKey(Paciente, on_delete=models.PROTECT, related_name="pacienteObservacion")
     
 
-# class EstadoPedido(models.Model):
-#     descripcion: models.CharField(max_length=64)
+class EstadoPedido(models.Model):
+    descripcion = models.CharField(max_length=64)
+
+class LadoLente(models.Model):
+    descripcion = models.CharField(max_length=64)
+
+class Clasificacion(models.Model):
+    descripcion = models.CharField(max_length=64)
+
+class TipoLente(models.Model):
+    descripcion = models.CharField(max_length=64)
+
+class TipoPago(models.Model):
+    descripcion = models.CharField(max_length=64)
+
+class Producto(models.Model):
+    precio = models.FloatField()
+    nombre = models.CharField(max_length=64)
+    detalle = models.CharField(max_length=152)
+    clasificacion = models.ForeignKey(LadoLente,on_delete=models.PROTECT, related_name="productoClasificacion")
+    lado_lente = models.ForeignKey(LadoLente,on_delete=models.PROTECT,null=True, related_name="productoLenteLado")
+    tipo_lente = models.ForeignKey(TipoLente,on_delete=models.PROTECT, null=True,related_name="productoLenteTipo")
+    armazon = models.BooleanField()
+
+class Pedido(models.Model):
+    productos = models.ManyToManyField(Producto, blank=True, related_name="productosPedidos")
+    estado = models.ForeignKey(EstadoPedido,on_delete=models.PROTECT,null=True, related_name="pedidoEstado")
+    tipo_pago = models.ForeignKey(TipoPago,on_delete=models.PROTECT,null=True, related_name="pedidoTipoPago")
+    subtotal = models.FloatField()

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import Paciente, Turno, EstadoTurno, Observacion
+from .models import Paciente, Turno, EstadoTurno, Observacion, Pedido, EstadoPedido, TipoPago, TipoLente, LadoLente, Clasificacion
 from django.contrib.auth.models import User
 from datetime import date
 
@@ -87,6 +87,80 @@ def eliminar_turno(request, turno_id):
     turno = Turno.objects.get(id=turno_id)
     turno.delete()
     return redirect('web_app:turnos')
+
+def pedidos(request):
+    busqueda_realizada = False
+    pedidos = []
+    estados = EstadoPedido.objects.all()
+    if request.method == 'POST':
+        filtros = {}
+        for key in request.POST.keys():
+            campos = ['estado']
+            if key in campos:
+                dato = request.POST[key]
+                if bool(dato):
+                    filtros[key] = dato
+
+        pedidos = Pedido.objects.filter(**filtros)
+        busqueda_realizada = True
+    return render(request, 'pedidos.html',{
+        'pedidos': pedidos,
+        'estados': estados,
+        'busqueda_realizada': busqueda_realizada,
+    })
+
+def pedido(request, pedido_id):
+    pedido = None
+    estados = EstadoPedido.objects.all()
+    pacientes = Paciente.objects.all()
+    tipos_pagos = TipoPago.objects.all()
+    tipos_lentes = TipoLente.objects.all()
+    lados_lentes = LadoLente.objects.all()
+    clasificaciones = Clasificacion.objects.all()
+    if pedido_id != 0:
+        pedido = Pedido.objects.get(pk=pedido_id)
+    return render(request, 'pedido.html', {
+        'pedido': pedido,
+        'pedido_id': pedido_id,
+        'estados': estados,
+        'pacientes': pacientes,
+        'tipos_pagos': tipos_pagos,
+        'tipos_lentes': tipos_lentes,
+        'lados_lentes': lados_lentes,
+        'clasificaciones': clasificaciones,
+    })
+    
+def crear_pedido(request, pedido_id):    
+    if request.method == 'POST':        
+        datos_actualizados = {}
+        for key in request.POST.keys():
+            campos = ['paciente', 'estado','tipo_pago','tipo_lente','lado_lente','clasificacion']
+            if key in campos:
+                dato = request.POST[key]
+                if bool(dato):
+                    if key == 'paciente':
+                        datos_actualizados[key] = Paciente.objects.get(id=dato)
+                    elif key == 'estado':
+                        datos_actualizados[key] = EstadoPedido.objects.get(id=dato)
+                    elif key == 'tipo_pago':
+                        datos_actualizados[key] = TipoPago.objects.get(id=dato)
+                    elif key == 'tipo_lente':
+                        datos_actualizados[key] = TipoLente.objects.get(id=dato)
+                    elif key == 'lado_lente':
+                        datos_actualizados[key] = LadoLente.objects.get(id=dato)
+                    elif key == 'clasificacion':
+                        datos_actualizados[key] = Clasificacion.objects.get(id=dato)
+
+        if pedido_id != 0:
+            pedido = Pedido.objects.get(pk=pedido_id)
+            pedido = {**pedido, **datos_actualizados}
+            pedido.save()
+        else:
+            Pedido.objects.create(**datos_actualizados)
+        return redirect('web_app:pedidos')
+
+def eliminar_pedido(request, pedido_id):
+    return render(request, 'pedidos.html')
 
 def pacientes(request):
     grupos = request.user.groups.all()
